@@ -1,9 +1,10 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { server } from './infrastructure/http/server';
-import Config from './config';
+
+import config from './../config';
 
 function start() {
-  server(Config.PORT);
+  server(config.port);
 }
 start();
 

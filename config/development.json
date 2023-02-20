@@ -1,0 +1,9 @@
+{
+  "db": {
+    "port": 5433,
+    "user": "oussama",
+    "name": "TSP",
+    "host": "localhost",
+    "password": "mypassword"
+  }
+}
