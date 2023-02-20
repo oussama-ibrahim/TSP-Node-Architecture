@@ -2,9 +2,9 @@ import axios from 'axios';
 import { arrayToString, waypointsToLngLnt } from '../utils/arrayModifier';
 import { TSP } from '../utils/TSPAlgorithm';
 import { IWaypoint, TRawLocation } from '../entities/location';
-import { IDbImpl } from '../entities/data/dbImpl';
+import { Db } from '../entities/data/dbImpl';
 
-function locationServices(LocationRepo: IDbImpl) {
+function locationServices(LocationRepo: Db) {
   const getSortedLocations = async (OSRM_URL: string, algorithm?: string) => {
     const locations = await LocationRepo.find();
     let customResponse = {};
@@ -31,11 +31,11 @@ function locationServices(LocationRepo: IDbImpl) {
   };
 
   const deleteLocation = async (id: string) => {
-    await LocationRepo.deleteOne(id);
+    await LocationRepo.deleteOne({ id });
   };
 
   const updateLocation = async (id: string, obj: TRawLocation) => {
-    await LocationRepo.updateOne(id, obj);
+    await LocationRepo.updateOne({ id }, obj);
   };
 
   const getLocations = async () => {

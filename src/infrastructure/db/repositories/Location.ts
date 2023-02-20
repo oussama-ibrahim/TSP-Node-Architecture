@@ -1,36 +1,41 @@
-import { EntityRepository, MikroORM } from '@mikro-orm/core';
-import { IDbImpl } from '../../../entities/data/dbImpl';
+import { EntityManager } from '@mikro-orm/postgresql';
+import { Db } from '../../../entities/data/dbImpl';
+import {TRawLocation } from '../../../entities/location';
 import { Location } from '../entities/Location';
 
+export class LocationRepo implements Db {
+  orm: EntityManager;
 
-export class UserRepository extends EntityRepository<Location> implements IDbImpl{
-  async insertOne(data:Location): Promise<Location> {
-    const user = this.create(data);
-    await this.persistAndFlush(user);
-    return user;
+  public async insertOne(data: TRawLocation): Promise<void> {
+    const location = new Location(data.lng, data.lat);
+    await this.orm.persistAndFlush(location);
   }
 
-   updateOne(id: string, data: Partial<Location>):void {
-    // const user = await this.findOneOrFail(id);
-    // this.assign(user, data);
-    // await this.persistAndFlush(user);
-
+  public async updateOne(query: object, data: TRawLocation): Promise<void> {
+    const location = await this.orm.findOne(Location, query);
+    data.lng && location?.lng != data.lng;
+    data.lat && location?.lat != data.lat;
+    await this.orm.flush();
   }
 
-  async deleteOne(id: string): Promise<void> {
-    const user = await this.findOneOrFail(id);
-    await this.removeAndFlush(user);
+  public async deleteOne(query: object): Promise<void> {
+    const location = await this.orm.findOne(Location, query);
+    location && (await this.orm.removeAndFlush(location));
   }
-  async deleteAll(): Promise<void> {
-    // const user = await this.findOneOrFail(id);
-    // await this.removeAndFlush(user);
+  public async deleteAll(): Promise<void> {
+    await this.orm.getRepository(Location).nativeDelete({});
   }
 
-  // async findOne(id: string): Promise<Location> {
-  //   return this.findOneOrFail(id);
-  // }
+  async findOne(query: object): Promise<Location | null> {
+    const location = await this.orm.findOne(Location, query);
+    return location;
+  }
 
-  async find(): Promise<Location[]> {
-    return this.findAll();
+  async find(query: object): Promise<Location[]> {
+    const locations = await this.orm.find(Location, query);
+    return locations;
+  }
+  constructor(orm: EntityManager) {
+    this.orm = orm;
   }
 }

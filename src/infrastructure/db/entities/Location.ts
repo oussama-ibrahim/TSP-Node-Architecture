@@ -7,10 +7,10 @@ export class Location implements TLocation {
     @PrimaryKey({ type: UuidType })
     id = uuidv4();
 
-    @Property()
+    @Property({nullable:false})
     lng!: number;
   
-    @Property()
+    @Property({nullable:false})
     lat!: number;
   
     @Property({ type: DateTimeType })

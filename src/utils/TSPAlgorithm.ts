@@ -1,6 +1,7 @@
-import { ILocation } from "../types";
+import { TLocation } from "../entities/location";
 
-export const TSP = (coordinates:ILocation[]) => {
+
+export const TSP = (coordinates:TLocation[]) => {
   // Calculate the distances between the nodes
   const distances: number[][] = [];
   for (let i = 0; i < coordinates.length; i++) {
@@ -30,7 +31,7 @@ export const TSP = (coordinates:ILocation[]) => {
   }
 
   // Use Dijkstra's algorithm to find the shortest path between the nodes
-  const sortedCoordinates: ILocation[] = [];
+  const sortedCoordinates: TLocation[] = [];
   const visited = new Set<number>();
   const startNode = 0;
   let currentNode = startNode;
